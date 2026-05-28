@@ -22,6 +22,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import { statusStore, setStore } from "@/stores";
+import { getRandomSakuraWallpaper } from "@/api";
 
 const set = setStore();
 const status = statusStore();
@@ -34,7 +35,7 @@ const emit = defineEmits(["loadComplete"]);
 const bgRandom = Math.floor(Math.random() * 3 + 1);
 
 // 赋值壁纸
-const setBgUrl = () => {
+const setBgUrl = async () => {
   const { backgroundType } = set;
   switch (backgroundType) {
     case 0:
@@ -64,6 +65,21 @@ const setBgUrl = () => {
         emit("loadComplete");
       }, 400);
       break;
+    case 6: {
+      // 随机樱花壁纸 🌸
+      const url = await getRandomSakuraWallpaper();
+      if (url) {
+        bgUrl.value = url;
+      } else {
+        // 全部失败 → 回落到樱花渐变
+        bgUrl.value = "";
+        setTimeout(() => {
+          status.setImgLoadStatus(true);
+          emit("loadComplete");
+        }, 400);
+      }
+      break;
+    }
     default:
       bgUrl.value = `/background/bg${bgRandom}.jpg`;
       break;

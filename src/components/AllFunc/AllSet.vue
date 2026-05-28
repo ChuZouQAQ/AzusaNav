@@ -57,6 +57,16 @@
               :y-gap="16"
             >
               <n-grid-item
+                :class="[
+                  'item',
+                  'sakura-pick',
+                  backgroundType === sakuraRandomBgIndex ? 'check' : null,
+                ]"
+                @click="changeBackground(sakuraRandomBgIndex)"
+              >
+                <span class="name">🌸 随机樱花</span>
+              </n-grid-item>
+              <n-grid-item
                 v-for="(item, index) in backgroundTypeArr"
                 :key="index"
                 :class="index === backgroundType ? 'item check' : 'item'"
@@ -348,10 +358,13 @@ const backgroundTypeArr = [
   { name: "随机动漫", tip: "随机二次元图，随机更换" },
   // 索引 4 为自定义壁纸（保留位）
   // 索引 5 为樱花渐变
+  // 索引 6 为随机樱花壁纸
 ];
 
 // 樱花渐变作为额外按钮，单独处理（索引 5）
 const sakuraBgIndex = 5;
+// 随机樱花壁纸（索引 6）
+const sakuraRandomBgIndex = 6;
 
 // 主题类别
 const themeTypeOptions = [
@@ -381,7 +394,10 @@ const changeBackground = (type, reset = false) => {
     return true;
   }
   backgroundType.value = type;
-  const name = type === sakuraBgIndex ? "樱花渐变" : backgroundTypeArr[type]?.name;
+  let name;
+  if (type === sakuraBgIndex) name = "樱花渐变";
+  else if (type === sakuraRandomBgIndex) name = "随机樱花壁纸";
+  else name = backgroundTypeArr[type]?.name;
   $message.success(`已切换为${name}，刷新后生效`);
 };
 
@@ -523,6 +539,15 @@ onMounted(() => {
     transition:
       background-color 0.3s,
       box-shadow 0.3s;
+    &.sakura-pick {
+      background: linear-gradient(135deg, #ffd5e4 0%, #ffb7c5 100%);
+      color: #5a2d3f;
+      font-weight: 600;
+      box-shadow: 0 0 0 1px rgba(255, 143, 173, 0.5);
+      &:hover {
+        box-shadow: 0 0 0 2px var(--sakura-400), var(--sakura-glow);
+      }
+    }
     &.check {
       background-color: var(--main-background-hover-color);
       &::before {

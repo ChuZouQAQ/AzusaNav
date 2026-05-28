@@ -136,3 +136,52 @@ export const getSearchSuggestions = async (keyWord) => {
     return null;
   }
 };
+
+/**
+ * 获取一张随机樱花壁纸
+ * 主源: Wallhaven 公开 API（关键字 sakura，随机排序，纯安全 SFW）
+ * 备源: 本地 sakuraWallpapers.json 中预置的 Unsplash 直链
+ * 优势: 全部 HTTPS，前端可直接使用，无需 API Key
+ *
+ * @returns {Promise<string>} 一个图片 URL
+ */
+export const getRandomSakuraWallpaper = async () => {
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+  const atleast = isMobile ? "1080x1920" : "1920x1080";
+  const ratios = isMobile ? "9x16,9x18,3x4" : "16x9,16x10,21x9";
+
+  // 1) 优先 Wallhaven
+  try {
+    const url = new URL("https://wallhaven.cc/api/v1/search");
+    url.searchParams.set("q", "sakura");
+    url.searchParams.set("sorting", "random");
+    url.searchParams.set("purity", "100"); // 仅 SFW
+    url.searchParams.set("categories", "110"); // General + Anime
+    url.searchParams.set("atleast", atleast);
+    url.searchParams.set("ratios", ratios);
+    const res = await fetch(url.toString(), { cache: "no-store" });
+    if (res.ok) {
+      const json = await res.json();
+      const list = Array.isArray(json?.data) ? json.data : [];
+      if (list.length) {
+        const pick = list[Math.floor(Math.random() * list.length)];
+        if (pick?.path) return pick.path;
+      }
+    }
+  } catch (e) {
+    console.warn("Wallhaven 樱花壁纸获取失败，回退本地池：", e);
+  }
+
+  // 2) 回退本地预置直链池
+  try {
+    const pool = (await import("@/assets/sakuraWallpapers.json")).default;
+    if (Array.isArray(pool) && pool.length) {
+      return pool[Math.floor(Math.random() * pool.length)];
+    }
+  } catch (e) {
+    console.error("本地樱花壁纸池加载失败：", e);
+  }
+
+  // 3) 最终兜底
+  return "";
+};
