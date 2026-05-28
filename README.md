@@ -1,9 +1,9 @@
 <p>
-<strong><h2>Snavigation</h2></strong>
+<strong><h2>AzusaNav</h2></strong>
 一个简约的起始页
 </p>
 
-![Snavigation.png](https://s2.loli.net/2022/07/15/FE6U2BJCynHDep8.jpg)
+![AzusaNav.png](https://s2.loli.net/2022/07/15/FE6U2BJCynHDep8.jpg)
 
 > 重构中，尚未完成
 
@@ -11,8 +11,8 @@
 
 > 由于 `CDN` 缓存原因，查看最新效果可能需要 `Ctrl` + `F5` 强制刷新浏览器缓存
 
-- [Snavigation](https://nav.imsyy.top)
-- [Snavigation Dev](https://snavigation-git-dev-imsyy.vercel.app/)
+- [AzusaNav](https://nav.Azusa.top)
+- [AzusaNav Dev](https://azusanav-git-dev-Azusa.vercel.app/)
 
 ### 功能
 
@@ -80,4 +80,4 @@
 
 - [青柠起始页](https://limestart.cn/)
 
-<a title="SSL" target="_blank" href="https://myssl.com/seal/detail?domain=blog.imsyy.top"><img src="https://img.shields.io/badge/MySSL-安全认证-brightgreen"></a>&nbsp;<a title="CDN" target="_blank" href="https://cdnjs.com/"><img src="https://img.shields.io/badge/CDN-Cloudflare-blue"></a>&nbsp;<a title="Copyright" target="_blank" href="https://imsyy.top/"><img src="https://img.shields.io/badge/Copyright%20%C2%A9%202020--2023-%E7%84%A1%E5%90%8D-red"></a>
+<a title="SSL" target="_blank" href="https://myssl.com/seal/detail?domain=blog.Azusa.top"><img src="https://img.shields.io/badge/MySSL-安全认证-brightgreen"></a>&nbsp;<a title="CDN" target="_blank" href="https://cdnjs.com/"><img src="https://img.shields.io/badge/CDN-Cloudflare-blue"></a>&nbsp;<a title="Copyright" target="_blank" href="https://Azusa.top/"><img src="https://img.shields.io/badge/Copyright%20%C2%A9%202020--2023-%E6%A2%93-red"></a>

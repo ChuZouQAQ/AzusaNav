@@ -55,7 +55,13 @@
 import { getCurrentTime } from "@/utils/timeTools";
 import { ref, onMounted, onBeforeUnmount, watch } from "vue";
 import { statusStore, setStore } from "@/stores";
-import { getAdcode, getWeather } from "@/api";
+import {
+  getLocation,
+  getWeatherByLatLon,
+  weatherCodeToText,
+  degreeToWindDir,
+  kmhToBeaufort,
+} from "@/api";
 
 const set = setStore();
 const status = statusStore();
@@ -66,7 +72,6 @@ const timeInterval = ref(null);
 
 // 天气数据
 const weatherData = ref(null);
-const weatherKey = import.meta.env.VITE_WEATHER_KEY;
 
 // 更新时间
 const updateTimeData = () => {
@@ -75,42 +80,45 @@ const updateTimeData = () => {
 
 // 获取天气数据
 const getWeatherData = async () => {
-  if (!weatherKey) {
-    return $message.warning("请配置天气 Key");
-  }
   // 当前时间戳
   const currentTime = Date.now();
-  // 上次获取天气数据的数据
+  // 上次获取天气数据
   let lastWeatherData = JSON.parse(localStorage.getItem("lastWeatherData")) || {
     data: {},
     lastFetchTime: 0,
   };
-  // 上次获取天气数据的时间戳与当前时间的时间差（毫秒）
   const timeDifference = currentTime - lastWeatherData.lastFetchTime;
-  // 是否超出 5 分钟
-  if (timeDifference >= 5 * 60 * 1000) {
-    const adCodeResult = await getAdcode(weatherKey);
-    if (adCodeResult.infocode !== "10000") {
-      return $message.error("地区查询失败");
-    }
-    // 获取天气数据
-    const weatherResult = await getWeather(weatherKey, adCodeResult.adcode);
-    if (weatherResult.infocode !== "10000") {
-      return $message.error("地区查询失败");
-    }
-    const data = weatherResult.lives[0];
-    weatherData.value = {
-      condition: data.weather,
-      temp: data.temperature,
-      windDir: data.winddirection + "风",
-      windLevel: data.windpower,
-    };
-    lastWeatherData = { data: weatherData.value, lastFetchTime: currentTime };
-    // 储存新天气数据
-    localStorage.setItem("lastWeatherData", JSON.stringify(lastWeatherData));
-  } else {
+  // 5 分钟内复用缓存
+  if (timeDifference < 5 * 60 * 1000 && lastWeatherData.data?.condition) {
     console.log("从缓存中读取天气数据：", lastWeatherData);
     weatherData.value = lastWeatherData.data;
+    return;
+  }
+  try {
+    // 1) 获取地理位置（IP 定位）
+    const loc = await getLocation();
+    if (!loc?.success || loc.latitude == null || loc.longitude == null) {
+      return $message.error("地区查询失败");
+    }
+    // 2) 获取天气
+    const weatherResult = await getWeatherByLatLon(loc.latitude, loc.longitude);
+    const cur = weatherResult?.current;
+    if (!cur) {
+      return $message.error("天气查询失败");
+    }
+    weatherData.value = {
+      condition: weatherCodeToText(cur.weather_code),
+      temp: Math.round(cur.temperature_2m),
+      windDir: degreeToWindDir(cur.wind_direction_10m) + "风",
+      windLevel: kmhToBeaufort(cur.wind_speed_10m),
+    };
+    localStorage.setItem(
+      "lastWeatherData",
+      JSON.stringify({ data: weatherData.value, lastFetchTime: currentTime }),
+    );
+  } catch (e) {
+    console.error("天气获取失败：", e);
+    $message.error(`天气获取失败：${e?.message ?? e}`);
   }
 };
 

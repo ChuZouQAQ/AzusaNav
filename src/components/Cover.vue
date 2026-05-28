@@ -43,10 +43,12 @@ const setBgUrl = () => {
       break;
     }
     case 2:
-      bgUrl.value = "https://api.aixiaowai.cn/gqapi/gqapi.php";
+      // 随机风景：picsum.photos
+      bgUrl.value = `https://picsum.photos/1920/1080?random=${Date.now()}`;
       break;
     case 3:
-      bgUrl.value = "https://api.aixiaowai.cn/api/api.php";
+      // 随机动漫：dmoe.cc 通过加时间戳防缓存
+      bgUrl.value = `https://www.dmoe.cc/random.php?t=${Date.now()}`;
       break;
     case 4:
       bgUrl.value = set.backgroundCustom;
