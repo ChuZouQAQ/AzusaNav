@@ -20,8 +20,10 @@
     >
       <div class="about-modal">
         <div class="about">
+          <span class="emoji">🌸</span>
           <span class="name">{{ siteName }}</span>
           <span class="version">v {{ packageJson.version }}</span>
+          <span class="slogan">花影斑驳，让起始页也成为风景</span>
         </div>
         <div class="desc">
           <n-space class="link" justify="center">
@@ -74,17 +76,26 @@ const jumpTo = (url) => {
   width: 100%;
   color: var(--main-text-color);
   z-index: 1;
+  text-shadow: var(--main-text-shadow);
   .copyright {
     display: flex;
     align-items: center;
     font-size: 13px;
     span {
-      margin: 0 2px;
-      opacity: 0.6;
+      margin: 0 4px;
+      opacity: 0.75;
       transition: opacity 0.3s;
       &::before {
         opacity: 0.6;
         transition: none;
+      }
+    }
+    .site-name {
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      &::before {
+        content: "🌸";
+        margin-right: 6px;
       }
     }
     .year {
@@ -96,14 +107,14 @@ const jumpTo = (url) => {
     }
     .icp {
       &::before {
-        content: "|";
-        margin-right: 4px;
+        content: "·";
+        margin-right: 6px;
       }
     }
     .about {
       &::before {
-        content: "|";
-        margin-right: 4px;
+        content: "·";
+        margin-right: 6px;
       }
     }
     .anthor,
@@ -112,6 +123,7 @@ const jumpTo = (url) => {
       cursor: pointer;
       &:hover {
         opacity: 1;
+        color: var(--sakura-300);
       }
     }
   }
@@ -123,6 +135,11 @@ const jumpTo = (url) => {
     flex-direction: column;
     align-items: center;
     width: 100%;
+    .emoji {
+      font-size: 40px;
+      margin-bottom: 8px;
+      animation: logo-breathe 3s infinite alternate;
+    }
     .name {
       font-size: 26px;
       font-weight: bold;
@@ -130,7 +147,13 @@ const jumpTo = (url) => {
     }
     .version {
       opacity: 0.6;
-      font-size: 16px;
+      font-size: 14px;
+    }
+    .slogan {
+      margin-top: 12px;
+      font-size: 13px;
+      opacity: 0.7;
+      letter-spacing: 1px;
     }
   }
   .desc {

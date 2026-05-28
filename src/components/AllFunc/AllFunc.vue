@@ -31,14 +31,17 @@ const status = statusStore();
   height: 64vh;
   max-width: 1200px;
   background-color: var(--main-background-light-color);
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(30px) saturate(1.4);
+  border: 1px solid var(--main-border-color);
+  box-shadow: var(--main-box-shadow);
   color: var(--main-text-color);
-  border-radius: 8px;
+  border-radius: var(--r-lg);
   transition:
     opacity 0.3s,
     transform 0.3s,
     margin-top 0.3s,
-    height 0.3s;
+    height 0.3s,
+    box-shadow 0.3s;
   z-index: 2;
   .all-set {
     overflow: hidden;

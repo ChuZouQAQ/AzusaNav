@@ -140,11 +140,13 @@ const setCustomEngine = () => {
   color: var(--main-text-color);
   background-color: var(--main-background-light-color);
   backdrop-filter: blur(30px) saturate(1.25);
-  border-radius: 16px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--main-border-color);
+  box-shadow: var(--main-box-shadow);
   box-sizing: border-box;
   z-index: 1;
   .all-engine {
-    padding: 10px;
+    padding: 12px;
     box-sizing: border-box;
     .engine {
       cursor: pointer;
@@ -153,15 +155,18 @@ const setCustomEngine = () => {
       align-items: center;
       justify-content: center;
       width: 100%;
-      height: 40px;
+      height: 44px;
       padding: 0 16px;
       grid-column: span 1 / span 1;
-      border-radius: 10px;
+      border-radius: var(--r-md);
       box-sizing: border-box;
       background-color: var(--main-background-light-color);
+      border: 1px solid transparent;
       transition:
         background-color 0.3s,
-        box-shadow 0.3s;
+        box-shadow 0.3s,
+        border-color 0.3s,
+        transform 0.2s;
       .i-icon {
         margin-right: 12px;
       }
@@ -173,27 +178,16 @@ const setCustomEngine = () => {
       }
       &.choose {
         background-color: var(--main-background-hover-color);
-        &::before {
-          content: "";
-          position: absolute;
-          border-radius: 14px;
-          top: -4px;
-          left: -4px;
-          right: -4px;
-          bottom: -4px;
-          border: 2px solid var(--main-background-hover-color);
-          transition: opacity 0.3s;
-        }
+        border-color: var(--sakura-300);
+        box-shadow: var(--sakura-glow);
       }
       &:hover {
         background-color: var(--main-background-hover-color);
-        box-shadow: 0 0 0px 2px var(--main-background-hover-color);
-        &::before {
-          opacity: 0;
-        }
+        border-color: var(--sakura-300);
+        transform: translateY(-1px);
       }
       &:active {
-        box-shadow: none;
+        transform: scale(0.97);
       }
     }
     @media (max-width: 798px) {

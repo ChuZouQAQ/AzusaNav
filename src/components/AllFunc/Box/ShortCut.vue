@@ -18,6 +18,13 @@
               @contextmenu="shortCutContextmenu($event, item)"
               @click="shortCutJump(item.url)"
             >
+              <img
+                class="favicon"
+                :src="getFavicon(item.url)"
+                alt=""
+                referrerpolicy="no-referrer"
+                @error="onFaviconError"
+              />
               <span class="name">{{ item.name }}</span>
             </n-grid-item>
             <n-grid-item
@@ -342,6 +349,27 @@ const shortCutJump = (url) => {
   }
 };
 
+// 获取站点 favicon
+const getFavicon = (url) => {
+  try {
+    const u = /^https?:\/\//i.test(url) ? url : `https://${url}`;
+    const host = new URL(u).hostname;
+    return `https://www.google.com/s2/favicons?domain=${host}&sz=64`;
+  } catch (e) {
+    return "";
+  }
+};
+
+// favicon 加载失败 —— 用一个樱花点缀代替
+const onFaviconError = (e) => {
+  // 使用 inline svg data url 作为兜底（樱花花瓣）
+  e.target.src =
+    "data:image/svg+xml;charset=utf-8," +
+    encodeURIComponent(
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><g fill="#ffb7c5"><path d="M16 4C13 7 13.5 10 16 13C18.5 10 19 7 16 4Z"/><path d="M16 4C13 7 13.5 10 16 13C18.5 10 19 7 16 4Z" transform="rotate(72 16 16)"/><path d="M16 4C13 7 13.5 10 16 13C18.5 10 19 7 16 4Z" transform="rotate(144 16 16)"/><path d="M16 4C13 7 13.5 10 16 13C18.5 10 19 7 16 4Z" transform="rotate(216 16 16)"/><path d="M16 4C13 7 13.5 10 16 13C18.5 10 19 7 16 4Z" transform="rotate(288 16 16)"/><circle cx="16" cy="16" r="2" fill="#ff8fad"/></g></svg>',
+    );
+};
+
 
 // download start
 // 点击按钮进行下载html文件
@@ -463,34 +491,60 @@ function clickFileDom() {
       box-sizing: border-box;
       .shortcut-item {
         cursor: pointer;
-        height: 60px;
-        padding: 0 10px;
+        height: 64px;
+        padding: 0 14px;
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
         background-color: var(--main-background-light-color);
-        border-radius: 8px;
-        font-size: 16px;
+        border: 1px solid transparent;
+        border-radius: var(--r-md);
+        font-size: 15px;
+        gap: 10px;
         transition:
           background-color 0.3s,
-          box-shadow 0.3s;
+          box-shadow 0.3s,
+          border-color 0.3s,
+          transform 0.2s;
+        .favicon {
+          width: 22px;
+          height: 22px;
+          flex-shrink: 0;
+          border-radius: 6px;
+          background-color: #fff;
+          padding: 2px;
+          box-sizing: border-box;
+          object-fit: contain;
+          box-shadow: 0 1px 4px rgba(240, 98, 146, 0.2);
+        }
         .i-icon {
           width: 1rem;
           margin-right: 6px;
           font-size: 20px;
           opacity: 1;
+          color: var(--sakura-400);
         }
         .name {
+          flex: 1;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
         }
         &:hover {
           background-color: var(--main-background-hover-color);
-          box-shadow: 0 0 0px 2px var(--main-background-hover-color);
+          border-color: var(--sakura-300);
+          box-shadow: var(--sakura-glow);
+          transform: translateY(-2px);
         }
         &:active {
-          box-shadow: none;
+          transform: scale(0.98);
+        }
+        /* "添加捷径" 项居中显示 */
+        &:last-child {
+          justify-content: center;
+          .favicon {
+            display: none;
+          }
         }
       }
     }
@@ -501,29 +555,41 @@ function clickFileDom() {
     align-items: center;
     justify-content: center;
     .tip {
-      font-size: 24px;
+      font-size: 22px;
       margin-bottom: 20px;
+      opacity: 0.8;
     }
   }
   .footer__btn-group {
     display: flex;
-    padding: 15px 0;
-    padding-left: 20px;
+    padding: 12px 20px;
+    gap: 10px;
     .footer__btn {
-      border-radius: 8px;
-      width: 80px;
-      height: 40px;
-      background-color: var(--main-background-light-color);
-      line-height: 40px;
-      text-align: center;
       cursor: pointer;
-      font-size: 16px;
+      border-radius: var(--r-md);
+      padding: 0 18px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--main-background-light-color);
+      border: 1px solid var(--main-border-color);
+      font-size: 14px;
+      transition:
+        background-color 0.3s,
+        box-shadow 0.3s,
+        transform 0.2s;
+      &:hover {
+        background-color: var(--main-background-hover-color);
+        box-shadow: var(--sakura-glow);
+        transform: translateY(-1px);
+      }
+      &:active {
+        transform: scale(0.97);
+      }
     }
     #shortCutUploadInput {
       display: none;
-    }
-    div + div {
-      margin-left: 10px;
     }
   }
 }

@@ -194,17 +194,20 @@ const changeEngine = () => {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    height: 42px;
+    height: 48px;
     width: 100%;
-    border-radius: 30px;
+    border-radius: var(--r-pill);
     color: var(--main-text-color);
     background-color: var(--main-background-color);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(20px) saturate(1.4);
+    border: 1px solid var(--main-border-color);
+    box-shadow: var(--main-box-shadow);
     opacity: 1;
     animation: fade-up-in 0.7s cubic-bezier(0.37, 0.99, 0.36, 1);
     transition:
       transform 0.3s,
       background-color 0.3s,
+      box-shadow 0.3s,
       opacity 0.5s;
     z-index: 1;
     .input {
@@ -234,14 +237,18 @@ const changeEngine = () => {
       align-items: center;
       justify-content: center;
       height: 100%;
-      width: 64px;
+      width: 56px;
       font-size: 20px;
-      border-radius: 30px;
+      border-radius: var(--r-pill);
       transition:
         background-color 0.3s,
-        opacity 0.3s;
+        opacity 0.3s,
+        transform 0.2s;
       &:hover {
-        background-color: var(--main-background-color);
+        background-color: var(--main-background-hover-color);
+      }
+      &:active {
+        transform: scale(0.92);
       }
       @media (max-width: 520px) {
         font-size: 18px;
@@ -268,7 +275,6 @@ const changeEngine = () => {
       }
     }
     &:hover {
-      // width: calc(100% - 60px);
       .all {
         .input {
           &::placeholder {
@@ -283,6 +289,7 @@ const changeEngine = () => {
     .all {
       transform: translateY(-60px);
       background-color: var(--main-input-hover-color);
+      box-shadow: var(--sakura-glow), var(--main-box-shadow);
       .input {
         color: var(--main-text-hover-color);
         &::placeholder {

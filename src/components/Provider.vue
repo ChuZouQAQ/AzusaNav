@@ -37,11 +37,11 @@ import {
 // 全局主题
 const themeOverrides = {
   common: {
-    fontFamily: "'HarmonyOS_Regular', sans-serif",
-    primaryColor: "#ffffff",
-    primaryColorHover: "#ffffff70",
-    primaryColorSuppl: "#ffffff30",
-    primaryColorPressed: "#ffffff30",
+    fontFamily: "'HarmonyOS_Regular', 'PingFang SC', 'Microsoft YaHei', sans-serif",
+    primaryColor: "#ffb7c5",
+    primaryColorHover: "#ff8fad",
+    primaryColorSuppl: "#ffd5e4",
+    primaryColorPressed: "#f06292",
   },
 };
 

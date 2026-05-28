@@ -1,6 +1,9 @@
 <template>
   <div :class="status.siteStatus !== 'normal' ? 'cover focus' : 'cover'">
+    <!-- 樱花渐变兜底层 —— 即使图片未加载完成，也保留樱花氛围 -->
+    <div class="sakura-gradient" />
     <img
+      v-if="set.backgroundType !== 5"
       v-show="status.imgLoadStatus"
       class="background"
       alt="background"
@@ -53,6 +56,14 @@ const setBgUrl = () => {
     case 4:
       bgUrl.value = set.backgroundCustom;
       break;
+    case 5:
+      // 樱花渐变 —— 不使用图片，直接触发"壁纸已加载"
+      bgUrl.value = "";
+      setTimeout(() => {
+        status.setImgLoadStatus(true);
+        emit("loadComplete");
+      }, 400);
+      break;
     default:
       bgUrl.value = `/background/bg${bgRandom}.jpg`;
       break;
@@ -104,6 +115,15 @@ onBeforeUnmount(() => {
       transform: scale(1.3);
     }
   }
+  .sakura-gradient {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(255, 183, 197, 0.55), transparent 55%),
+      radial-gradient(circle at 85% 25%, rgba(255, 213, 228, 0.45), transparent 55%),
+      radial-gradient(circle at 50% 90%, rgba(255, 143, 173, 0.45), transparent 60%),
+      linear-gradient(135deg, #ffe4ec 0%, #ffd5e4 40%, #ffb7c5 100%);
+  }
   .background {
     position: absolute;
     left: 0;
@@ -125,8 +145,9 @@ onBeforeUnmount(() => {
     top: 0;
     width: 100%;
     height: 100%;
-    background-image: radial-gradient(rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0.5) 100%),
-      radial-gradient(rgba(0, 0, 0, 0) 33%, rgba(0, 0, 0, 0.3) 166%);
+    background-image:
+      radial-gradient(rgba(45, 31, 44, 0) 0, rgba(45, 31, 44, 0.45) 100%),
+      radial-gradient(rgba(45, 31, 44, 0) 33%, rgba(45, 31, 44, 0.25) 166%);
   }
 }
 </style>

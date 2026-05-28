@@ -11,6 +11,13 @@
             </div>
             <n-select class="set" v-model:value="themeType" :options="themeTypeOptions" />
           </n-card>
+          <n-card class="set-item">
+            <div class="name">
+              <span class="title">樱花飘落 🌸</span>
+              <span class="tip">页面上飘落的樱花花瓣装饰</span>
+            </div>
+            <n-switch v-model:value="showSakura" :round="false" />
+          </n-card>
           <n-card
             class="set-item cover"
             :content-style="{
@@ -56,6 +63,12 @@
                 @click="changeBackground(index)"
               >
                 <span class="name" v-html="item.name" />
+              </n-grid-item>
+              <n-grid-item
+                :class="backgroundType === sakuraBgIndex ? 'item check' : 'item'"
+                @click="changeBackground(sakuraBgIndex)"
+              >
+                <span class="name">樱花渐变</span>
               </n-grid-item>
             </n-grid>
           </n-card>
@@ -185,6 +198,43 @@
       </n-tab-pane>
       <n-tab-pane name="other" tab="其他设置">
         <n-scrollbar class="scrollbar">
+          <n-h6 prefix="bar"> 键盘快捷键 </n-h6>
+          <n-card class="set-item shortcut-card">
+            <div class="shortcuts-grid">
+              <div class="kbd-row">
+                <span class="kbd"> / </span>
+                <span class="kbd-desc">聚焦搜索框</span>
+              </div>
+              <div class="kbd-row">
+                <span class="kbd">Esc</span>
+                <span class="kbd-desc">返回首页</span>
+              </div>
+              <div class="kbd-row">
+                <span class="kbd">空格</span>
+                <span class="kbd-desc">打开主菜单</span>
+              </div>
+              <div class="kbd-row">
+                <span class="kbd">Enter</span>
+                <span class="kbd-desc">确认搜索</span>
+              </div>
+              <div class="kbd-row">
+                <span class="kbd">Ctrl + B</span>
+                <span class="kbd-desc">切换主菜单</span>
+              </div>
+              <div class="kbd-row">
+                <span class="kbd">Ctrl + ,</span>
+                <span class="kbd-desc">打开设置</span>
+              </div>
+              <div class="kbd-row">
+                <span class="kbd">Ctrl + ↑</span>
+                <span class="kbd-desc">面板展开</span>
+              </div>
+              <div class="kbd-row">
+                <span class="kbd">Ctrl + ↓</span>
+                <span class="kbd-desc">面板收起</span>
+              </div>
+            </div>
+          </n-card>
           <n-h6 prefix="bar"> 重置 </n-h6>
           <n-card class="set-item">
             <div class="name">
@@ -282,6 +332,7 @@ const {
   showZeroTime,
   use12HourFormat,
   showSuggestions,
+  showSakura,
   urlJumpType,
   timeStyle,
 } = storeToRefs(set);
@@ -295,7 +346,12 @@ const backgroundTypeArr = [
   { name: "每日必应", tip: "必应每日一图，每天更新" },
   { name: "随机风景", tip: "随机风景图，随机更换" },
   { name: "随机动漫", tip: "随机二次元图，随机更换" },
+  // 索引 4 为自定义壁纸（保留位）
+  // 索引 5 为樱花渐变
 ];
+
+// 樱花渐变作为额外按钮，单独处理（索引 5）
+const sakuraBgIndex = 5;
 
 // 主题类别
 const themeTypeOptions = [
@@ -325,7 +381,8 @@ const changeBackground = (type, reset = false) => {
     return true;
   }
   backgroundType.value = type;
-  $message.success(`已切换为${backgroundTypeArr[type].name}，刷新后生效`);
+  const name = type === sakuraBgIndex ? "樱花渐变" : backgroundTypeArr[type]?.name;
+  $message.success(`已切换为${name}，刷新后生效`);
 };
 
 // 链接跳转方式
@@ -489,6 +546,45 @@ onMounted(() => {
     }
     &:active {
       box-shadow: none;
+    }
+  }
+}
+
+/* 快捷键说明卡片 */
+.shortcut-card {
+  .n-card__content {
+    display: block !important;
+  }
+  .shortcuts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px 24px;
+    width: 100%;
+    @media (max-width: 600px) {
+      grid-template-columns: 1fr;
+    }
+    .kbd-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      .kbd {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 70px;
+        padding: 4px 10px;
+        font-family: ui-monospace, "JetBrains Mono", monospace;
+        font-size: 12px;
+        background-color: var(--main-background-light-color);
+        border: 1px solid var(--main-border-color);
+        border-radius: 6px;
+        box-shadow: inset 0 -2px 0 rgba(255, 183, 197, 0.4);
+        color: var(--main-text-color);
+      }
+      .kbd-desc {
+        font-size: 14px;
+        opacity: 0.85;
+      }
     }
   }
 }

@@ -221,7 +221,9 @@ defineExpose({ keyboardEvents });
   color: var(--main-text-color);
   background-color: var(--main-background-light-color);
   backdrop-filter: blur(30px) saturate(1.25);
-  border-radius: 16px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--main-border-color);
+  box-shadow: var(--main-box-shadow);
   transition:
     height 0.2s ease,
     opacity 0.3s ease,
@@ -236,14 +238,15 @@ defineExpose({ keyboardEvents });
       display: flex;
       flex-direction: row;
       align-items: center;
-      padding: 6px 12px;
+      padding: 10px 16px;
       font-size: 14px;
       transition:
         background-color 0.3s,
         padding-left 0.3s;
       .i-icon {
-        opacity: 0.8;
-        margin-right: 8px;
+        opacity: 0.85;
+        margin-right: 10px;
+        color: var(--sakura-400);
       }
       .text {
         width: 100%;
@@ -254,13 +257,13 @@ defineExpose({ keyboardEvents });
       @media (min-width: 520px) {
         &:hover,
         &.focus {
-          background-color: var(--main-background-light-color);
-          padding-left: 18px;
+          background-color: var(--main-background-hover-color);
+          padding-left: 22px;
         }
       }
       &:active {
-        background-color: var(--main-background-light-color);
-        padding-left: 18px;
+        background-color: var(--main-background-hover-color);
+        padding-left: 22px;
       }
     }
   }

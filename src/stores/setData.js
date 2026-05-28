@@ -39,6 +39,10 @@ const useSetDataStore = defineStore("setData", {
       showWeather: true,
       // 是否显示搜索建议
       showSuggestions: true,
+      // 樱花飘落
+      showSakura: true,
+      // 樱花飘落密度 light / normal / heavy
+      sakuraDensity: "normal",
       // 跳转方式
       // open 新标签页 / href 当前页面
       urlJumpType: "open",

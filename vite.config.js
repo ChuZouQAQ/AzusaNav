@@ -35,11 +35,11 @@ export default defineConfig({
       manifest: {
         name: "AzusaNav",
         short_name: "AzusaNav",
-        description: "一个极致简约的导航页",
+        description: "一个樱花主题的极致简约导航页",
         display: "standalone",
         start_url: "/",
-        theme_color: "#fff",
-        background_color: "#efefef",
+        theme_color: "#ffb7c5",
+        background_color: "#ffeef5",
         icons: [
           {
             src: "/icon/logo-144.png",
