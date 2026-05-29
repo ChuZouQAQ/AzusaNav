@@ -3,7 +3,6 @@
     <!-- 樱花渐变兜底层 —— 即使图片未加载完成，也保留樱花氛围 -->
     <div class="sakura-gradient" />
     <img
-      v-if="set.backgroundType !== 5"
       v-show="status.imgLoadStatus"
       class="background"
       alt="background"
@@ -30,59 +29,19 @@ const bgUrl = ref(null);
 const imgTimeout = ref(null);
 const emit = defineEmits(["loadComplete"]);
 
-// 壁纸随机数
-// 请依据文件夹内的图片个数修改 Math.random() 后面的第一个数字
-const bgRandom = Math.floor(Math.random() * 3 + 1);
-
-// 赋值壁纸
+// 赋值壁纸 —— 固定为随机樱花壁纸 🌸
 const setBgUrl = async () => {
-  const { backgroundType } = set;
-  switch (backgroundType) {
-    case 0:
-      bgUrl.value = `/background/bg${bgRandom}.jpg`;
-      break;
-    case 1: {
-      const isMobile = window.innerWidth < 768;
-      bgUrl.value = `https://api.dujin.org/bing/${isMobile ? "m" : "1920"}.php`;
-      break;
-    }
-    case 2:
-      // 随机风景：picsum.photos
-      bgUrl.value = `https://picsum.photos/1920/1080?random=${Date.now()}`;
-      break;
-    case 3:
-      // 随机动漫：dmoe.cc 通过加时间戳防缓存
-      bgUrl.value = `https://www.dmoe.cc/random.php?t=${Date.now()}`;
-      break;
-    case 4:
-      bgUrl.value = set.backgroundCustom;
-      break;
-    case 5:
-      // 樱花渐变 —— 不使用图片，直接触发"壁纸已加载"
-      bgUrl.value = "";
-      setTimeout(() => {
-        status.setImgLoadStatus(true);
-        emit("loadComplete");
-      }, 400);
-      break;
-    case 6: {
-      // 随机樱花壁纸 🌸
-      const url = await getRandomSakuraWallpaper();
-      if (url) {
-        bgUrl.value = url;
-      } else {
-        // 全部失败 → 回落到樱花渐变
-        bgUrl.value = "";
-        setTimeout(() => {
-          status.setImgLoadStatus(true);
-          emit("loadComplete");
-        }, 400);
-      }
-      break;
-    }
-    default:
-      bgUrl.value = `/background/bg${bgRandom}.jpg`;
-      break;
+  // 随机樱花壁纸 🌸
+  const url = await getRandomSakuraWallpaper();
+  if (url) {
+    bgUrl.value = url;
+  } else {
+    // 全部失败 → 回落到樱花渐变
+    bgUrl.value = "";
+    setTimeout(() => {
+      status.setImgLoadStatus(true);
+      emit("loadComplete");
+    }, 400);
   }
 };
 
@@ -103,11 +62,17 @@ const imgAnimationEnd = () => {
   emit("loadComplete");
 };
 
-// 图片显示失败
-const imgLoadError = () => {
+// 图片显示失败 —— 换一张随机樱花，仍失败则落到樱花渐变
+const imgLoadError = async () => {
   console.error("壁纸加载失败：", bgUrl.value);
-  $message.error("壁纸加载失败，已临时切换回默认");
-  bgUrl.value = `/background/bg${bgRandom}.jpg`;
+  const url = await getRandomSakuraWallpaper();
+  if (url && url !== bgUrl.value) {
+    bgUrl.value = url;
+  } else {
+    bgUrl.value = "";
+    status.setImgLoadStatus(true);
+    emit("loadComplete");
+  }
 };
 
 onMounted(() => {
