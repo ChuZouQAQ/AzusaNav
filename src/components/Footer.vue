@@ -2,13 +2,19 @@
   <footer id="footer" @click.stop>
     <div class="copyright">
       <span class="site-name">{{ siteName }}</span>
+      <i class="sep" aria-hidden="true"></i>
       <span class="year">{{ fullYear }}</span>
+      <i class="sep" aria-hidden="true"></i>
       <span class="anthor" @click="jumpTo('https://azusa.uk')">
         {{ siteAnthor }}
       </span>
-      <span v-if="icp" class="icp" @click="jumpTo('https://beian.miit.gov.cn')">
-        {{ icp }}
-      </span>
+      <template v-if="icp">
+        <i class="sep" aria-hidden="true"></i>
+        <span class="icp" @click="jumpTo('https://beian.miit.gov.cn')">
+          {{ icp }}
+        </span>
+      </template>
+      <i class="sep" aria-hidden="true"></i>
       <span class="about" @click="aboutSiteModal = true">关于</span>
     </div>
     <!-- 关于 -->
@@ -71,50 +77,63 @@ const jumpTo = (url) => {
   align-items: center;
   justify-content: center;
   bottom: 0;
-  height: 50px;
+  height: 56px;
   width: 100%;
   color: var(--main-text-color);
   z-index: 1;
   text-shadow: var(--main-text-shadow);
+  pointer-events: none;
   .copyright {
     display: flex;
     align-items: center;
+    gap: 9px;
+    padding: 7px 18px;
     font-size: 13px;
+    line-height: 1;
+    pointer-events: auto;
+    border-radius: var(--r-pill);
+    background-color: var(--main-background-light-color);
+    border: 1px solid transparent;
+    backdrop-filter: blur(14px) saturate(1.3);
+    box-shadow: 0 6px 20px rgba(90, 45, 63, 0.18);
+    transition:
+      border-color 0.3s,
+      box-shadow 0.3s,
+      transform 0.3s;
+    animation: fade-up-in 0.8s ease;
+    &:hover {
+      border-color: var(--main-border-color);
+      box-shadow: var(--sakura-glow);
+      transform: translateY(-2px);
+    }
     span {
-      margin: 0 4px;
-      opacity: 0.75;
-      transition: opacity 0.3s;
-      &::before {
-        opacity: 0.6;
-        transition: none;
-      }
+      opacity: 0.82;
+      transition:
+        opacity 0.3s,
+        color 0.3s;
+    }
+    /* 樱花点分隔符 */
+    .sep {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background-color: var(--sakura-300);
+      opacity: 0.55;
+      flex-shrink: 0;
     }
     .site-name {
       font-weight: 600;
       letter-spacing: 0.5px;
+      opacity: 1;
       &::before {
         content: "🌸";
         margin-right: 6px;
+        font-size: 12px;
       }
     }
     .year {
-      &::before {
-        content: "@";
-        opacity: 1;
-        margin-right: 4px;
-      }
-    }
-    .icp {
-      &::before {
-        content: "·";
-        margin-right: 6px;
-      }
-    }
-    .about {
-      &::before {
-        content: "·";
-        margin-right: 6px;
-      }
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.5px;
     }
     .anthor,
     .icp,
@@ -123,6 +142,7 @@ const jumpTo = (url) => {
       &:hover {
         opacity: 1;
         color: var(--sakura-300);
+        text-shadow: 0 0 12px rgba(255, 143, 173, 0.6);
       }
     }
   }
