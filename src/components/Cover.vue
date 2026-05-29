@@ -9,7 +9,7 @@
       :src="bgUrl"
       :style="{ '--blur': set.backgroundBlur + 'px' }"
       @load="imgLoadComplete"
-      @error.once="imgLoadError"
+      @error="imgLoadError"
       @animationend="imgAnimationEnd"
     />
     <Transition name="fade">
@@ -27,22 +27,27 @@ const set = setStore();
 const status = statusStore();
 const bgUrl = ref(null);
 const imgTimeout = ref(null);
+const usedBgUrls = new Set();
+const maxRetryCount = 5;
 const emit = defineEmits(["loadComplete"]);
 
-// 赋值壁纸 —— 固定为随机樱花壁纸 🌸
+// 赋值壁纸 —— 打开网站时固定使用随机樱花图片
 const setBgUrl = async () => {
-  // 随机樱花壁纸 🌸
-  const url = await getRandomSakuraWallpaper();
-  if (url) {
-    bgUrl.value = url;
-  } else {
-    // 全部失败 → 回落到樱花渐变
-    bgUrl.value = "";
-    setTimeout(() => {
-      status.setImgLoadStatus(true);
-      emit("loadComplete");
-    }, 400);
+  for (let i = 0; i < maxRetryCount; i++) {
+    const url = await getRandomSakuraWallpaper();
+    if (url && !usedBgUrls.has(url)) {
+      usedBgUrls.add(url);
+      bgUrl.value = url;
+      return;
+    }
   }
+
+  // 全部失败或重复命中时，回落到樱花渐变，避免页面停在加载态
+  bgUrl.value = "";
+  setTimeout(() => {
+    status.setImgLoadStatus(true);
+    emit("loadComplete");
+  }, 400);
 };
 
 // 图片加载完成
@@ -62,17 +67,10 @@ const imgAnimationEnd = () => {
   emit("loadComplete");
 };
 
-// 图片显示失败 —— 换一张随机樱花，仍失败则落到樱花渐变
+// 图片显示失败 —— 继续换随机樱花，连续失败后落到樱花渐变
 const imgLoadError = async () => {
   console.error("壁纸加载失败：", bgUrl.value);
-  const url = await getRandomSakuraWallpaper();
-  if (url && url !== bgUrl.value) {
-    bgUrl.value = url;
-  } else {
-    bgUrl.value = "";
-    status.setImgLoadStatus(true);
-    emit("loadComplete");
-  }
+  await setBgUrl();
 };
 
 onMounted(() => {
