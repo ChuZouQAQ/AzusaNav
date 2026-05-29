@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "AzusaNav",
+  "version": "2.0.0",
+  "description": "一个樱花主题的极致简约导航页",
+  "icons": {
+    "128": "icon/azusanav-logo-128.png"
+  },
+  "chrome_url_overrides": {
+    "newtab": "index.html"
+  }
+}
