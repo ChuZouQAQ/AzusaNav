@@ -3,7 +3,7 @@
     <div class="copyright">
       <span class="site-name">{{ siteName }}</span>
       <span class="year">{{ fullYear }}</span>
-      <span class="anthor" @click="jumpTo(copyrightLink ?? 'https://github.com/Azusa/AzusaNav')">
+      <span class="anthor" @click="jumpTo('https://azusa.uk')">
         {{ siteAnthor }}
       </span>
       <span v-if="icp" class="icp" @click="jumpTo('https://beian.miit.gov.cn')">
@@ -49,7 +49,6 @@ const set = setStore();
 const icp = import.meta.env.VITE_ICP;
 const siteName = import.meta.env.VITE_SITE_TITLE;
 const siteAnthor = import.meta.env.VITE_SITE_ANTHOR;
-const copyrightLink = import.meta.env.VITE_SITE_COPYRIGHTLINK;
 const fullYear = new Date().getFullYear();
 
 // 关于弹窗数据
